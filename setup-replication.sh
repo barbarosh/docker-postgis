@@ -51,15 +51,12 @@ else
     echo "Destroy database has been set to false: Check Backup directory if it already exists"
     configure_replication_permissions
     # We need a clever way to identify if base backup exists
-    if [[ "$(ls -A ${DATADIR}/pg_xlog/000000010000000000000004)" ]]; then
+    if [$(ls -l ${DATADIR}/pg_xlog | grep ^- | wc -l) -ge 1 ]; then
 			echo "Base directory exist - Please startup the database"
 	else
 
 	   streaming_replication
 	fi
-
-
-
 fi
 
 # Setup recovery.conf, a configuration file for slave
