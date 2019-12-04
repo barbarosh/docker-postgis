@@ -51,7 +51,9 @@ else
     echo "Destroy database has been set to false: Check Backup directory if it already exists"
     configure_replication_permissions
     # We need a clever way to identify if base backup exists
-    if [$(ls -l ${DATADIR}/pg_xlog | grep ^- | wc -l) -ge 1 ]; then
+	FILES_COUNT=$(ls -l ${DATADIR}/pg_xlog | grep ^- | wc -l)
+	MIN_FILES=1
+    if [[ "$FILES_COUNT" -ge "$MIN_FILES" ]]; then
 			echo "Base directory exist - Please startup the database"
 	else
 
