@@ -5,16 +5,17 @@ MAINTAINER Tim Sutton<tim@kartoza.com>
 
 # Reset ARG for version
 ARG IMAGE_VERSION
-RUN  export DEBIAN_FRONTEND=noninteractive
-ENV  DEBIAN_FRONTEND noninteractive
-RUN  dpkg-divert --local --rename --add /sbin/initctl
+RUN export DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND noninteractive
+RUN dpkg-divert --local --rename --add /sbin/initctl
 
 RUN apt -y update; apt -y install gnupg2 wget ca-certificates rpl pwgen
 RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ ${IMAGE_VERSION}-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 
 #-------------Application Specific Stuff ----------------------------------------------------
-
+RUN apt install locales -y; localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+ENV LANG en_US.utf8
 # We add postgis as well to prevent build errors (that we dont see on local builds)
 # on docker hub e.g.
 # The following packages have unmet dependencies:
